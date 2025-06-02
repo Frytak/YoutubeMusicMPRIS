@@ -1,0 +1,19 @@
+{
+    "name": "Youtube-music-mpris-server",
+    "version": "0.1.0",
+
+    "bin": {
+        "youtube-music-mpris-server": "./server.js"
+    },
+
+    "dependencies": {
+        "mpris-service": "^2.1.2",
+        "socket.io": "^4.8.1",
+        "socket.io-client": "^4.8.1",
+        "request": "2.88.2"
+    },
+
+    "scripts": {
+        "build": ""
+    }
+}
