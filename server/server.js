@@ -26,12 +26,15 @@ const events = ["playpause", "play", "pause", "next", "previous", "position"];
 
 for (const event of events) {
     player.on(event, (data) => {
+        console.log(`Received event from playerctl: ${event}`);
+        console.log(data);
         io.emit(event, data);
     });
 }
 
 io.on("connection", (socket) => {
     socket.on("metadata", (metadata) => {
+        console.log("Received metadata from extension");
         console.log(metadata);
 
         player.metadata = {
@@ -43,9 +46,10 @@ io.on("connection", (socket) => {
             "mpris:length": metadata.length ?? 0,
         };
 
+        console.log(`Downloading song art for ${player.metadata["xesam:title"]} - ${player.metadata["xesam:artist"]}`);
         // The download can take longer for a previous art while switching music, it can override the image
         download(metadata.artUrl, '/tmp/youtube-music-mpris-server-art.png', () => {
-            console.log("Downloaded album art");
+            console.log(`Downloading song art for ${player.metadata["xesam:title"]} - ${player.metadata["xesam:artist"]}`);
             player.metadata = {
                 "xesam:title": metadata.title ?? "",
                 "xesam:album": metadata.album ?? "",
@@ -58,7 +62,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("playstate", (playstate) => {
-        console.log("Playstate: " + playstate)
+        console.log("Received playstate: " + playstate);
         player.playbackStatus = playstate;
     });
 
@@ -68,7 +72,7 @@ io.on("connection", (socket) => {
     };
 
     socket.on("seeked", (timestamp) => {
-        console.log("Seeked: " + timestamp);
+        console.log("Received seeked event: " + timestamp);
         player.seeked(timestamp);
     });
 
